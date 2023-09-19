@@ -1,48 +1,63 @@
-﻿Console.WriteLine("введите размер квадратного массива");
-int massVol = Convert.ToInt32(Console.ReadLine());
-int[,] numbers = new int[massVol, massVol];
-FillArrayRandomNumbers(numbers);
-PrintArray(numbers);
-int minsum = Int32.MaxValue;
-int indexLine = 0;
+﻿Console.WriteLine("Введите размер массива m x n и диапазон случайных значений:");
+int m = InputNumbers("Введите m: ");
+int n = InputNumbers("Введите n: ");
+int range = InputNumbers("Введите диапазон: от 0 до ");
 
-for (int i = 0; i < numbers.GetLength(0); i++)
+int[,] array = new int[m, n];
+CreateArray(array);
+WriteArray(array);
+
+int minSumLine = 0;
+int sumLine = SumLineElements(array, 0);
+for (int i = 1; i < array.GetLength(0); i++)
 {
-    int sum = 0;
-    for (int j = 0; j < numbers.GetLength(1); j++)
+    int tempSumLine = SumLineElements(array, i);
+    if (sumLine > tempSumLine)
     {
-        sum = sum + numbers[i, j];
-    }
-    if (sum < minsum)
-    {
-        minsum = sum;
-        indexLine++;
+        sumLine = tempSumLine;
+        minSumLine = i;
     }
 }
 
-Console.WriteLine("строка с наименьшей суммой елементов под номером: " + (indexLine) + ", с суммой елементов равной: " + (minsum));
+Console.WriteLine($"\n{minSumLine + 1} - строкa с наименьшей суммой ({sumLine}) элементов ");
 
-void FillArrayRandomNumbers(int[,] array)
+
+int SumLineElements(int[,] array, int i)
+{
+    int sumLine = array[i, 0];
+    for (int j = 1; j < array.GetLength(1); j++)
+    {
+        sumLine += array[i, j];
+    }
+    return sumLine;
+}
+
+int InputNumbers(string input)
+{
+    Console.Write(input);
+    int output = Convert.ToInt32(Console.ReadLine());
+    return output;
+}
+
+void CreateArray(int[,] array)
 {
     for (int i = 0; i < array.GetLength(0); i++)
     {
         for (int j = 0; j < array.GetLength(1); j++)
         {
-            array[i, j] = new Random().Next(0, 10);
+            array[i, j] = new Random().Next(range);
         }
     }
 }
 
-void PrintArray(int[,] array)
+void WriteArray(int[,] array)
 {
     for (int i = 0; i < array.GetLength(0); i++)
     {
-        Console.Write("[ ");
         for (int j = 0; j < array.GetLength(1); j++)
         {
             Console.Write(array[i, j] + " ");
         }
-        Console.Write("]");
-        Console.WriteLine("");
+        Console.WriteLine();
     }
 }
